@@ -1,0 +1,37 @@
+apiVersion: v1 # 
+kind: Pod 
+metadata:
+ name: web
+ labels: 
+  app: web
+spec: 
+ initContainers:
+  - name: init-webpod
+    image: busybox:1.36
+    command: ['sh', '-c', 'wget -O- https://tinyurl.com/otus-k8s-intro | sh']
+    volumeMounts:
+    - name: app
+      mountPath: /app
+    resources:
+      limits:
+        cpu: "0.5"
+        memory: "32Mi"
+      requests:
+        cpu: "0.1"
+        memory: "16Mi"
+ containers: 
+ - name: webpod
+   image: m1keio/otus:webapp
+   volumeMounts:
+    - name: app
+      mountPath: /app
+   resources:
+      limits:
+        cpu: "0.5"
+        memory: "32Mi"
+      requests:
+        cpu: "0.1"
+        memory: "16Mi"
+ volumes:
+  - name: app
+    emptyDir: {}
