@@ -12,7 +12,7 @@ kind: ClusterRoleBinding
 metadata:
   name: prometheus-pods-access-binding
 roleRef:
-  apiGroup: ""
+  apiGroup: "rbac.authorization.k8s.io"
   kind: ClusterRole
   name: prometheus-pods-access
 subjects:
