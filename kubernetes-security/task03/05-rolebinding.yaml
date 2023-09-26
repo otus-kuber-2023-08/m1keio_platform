@@ -1,0 +1,23 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: view
+  namespace: dev
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "deployments", "configmaps", "secrets"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: view-binding
+  namespace: dev
+subjects:
+- kind: ServiceAccount
+  name: ken
+  namespace: dev
+roleRef:
+  apiGroup: ""
+  kind: Role
+  name: view
