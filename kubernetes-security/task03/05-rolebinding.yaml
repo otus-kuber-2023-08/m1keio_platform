@@ -5,7 +5,10 @@ metadata:
   namespace: dev
 rules:
 - apiGroups: [""]
-  resources: ["pods", "services", "deployments", "configmaps", "secrets"]
+  resources: ["pods", "services", "configmaps", "secrets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
   verbs: ["get", "list", "watch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -18,6 +21,6 @@ subjects:
   name: ken
   namespace: dev
 roleRef:
-  apiGroup: ""
+  apiGroup: "rbac.authorization.k8s.io"
   kind: Role
   name: view

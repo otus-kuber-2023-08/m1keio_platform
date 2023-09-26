@@ -42,38 +42,51 @@
 
 <details closed>
   <summary>ДЗ 2</summary>
-  #### Q: Описание ДЗ
-  #### A: 
+
+#### Q: Описание ДЗ
+
+#### A:
+
         1) Разобрали некоторые сущности в Kubernates такие как Deployment и Replicaset.
         2) Поиграли со стратегией релизов
+
 </details>
 
 <details closed>
   <summary>ДЗ 3</summary>
-  #### Q: Описание ДЗ
-  #### A:
+
+#### Q: Описание ДЗ
+
+#### A:
+
         1) Разобрали некоторые сущности в Kubernates такие как Services и Ingress.
         2) Развернули MetalLB
         3) Натроили Ingress для деплоймента их ДЗ 1
         4) Пробросили наруду панель управлени
         5) Настроили canary-release
+
 </details>
 
 <details closed>
   <summary>ДЗ 4</summary>
-  #### Q: Описание ДЗ
-  #### A:
+
+#### Q: Описание ДЗ
+
+#### A:
+
         1) Разобрали некоторые сущности в Kubernates такие как PV, PVC, StatefullSet и Secrets.
         2) Развернули MinIO как StateFullSet
         3) Настроили PV и PVC
         4) Унесли секреты от Minio в Secrets
         5) Все разобрали
+
 </details>
 
 <details closed>
   <summary>ДЗ 5</summary>
-  #### Q: Описание ДЗ
-  #### A:
+  
+#### Q: Описание ДЗ
+#### A:
         1) Посоздавали разные сервис аккаунты в разных скоупах
         2) Посоздавали роли с разными наборами прав
         3) Посоздавали RoleBindings между ролями и сервисаккаунтами

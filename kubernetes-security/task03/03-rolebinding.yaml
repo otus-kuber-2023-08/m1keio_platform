@@ -20,5 +20,5 @@ subjects:
   namespace: dev
 roleRef:
   apiGroup: ""
-  kind: Role
+  kind: ClusterRole
   name: admin
