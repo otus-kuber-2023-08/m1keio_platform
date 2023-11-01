@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ngx-easybarin-com-ingress
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - ngx.easybarin.com
+    secretName:  ngx-easybarin-com
+  rules:
+  - host: ngx.easybarin.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ngx 
+            port:
+              number: 80
