@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ngx-easybarin-com
+  namespace: default
+spec:
+  secretName: ngx-easybarin-com
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: ngx.easybarin.com
+  dnsNames:
+  - ngx.easybarin.com
+

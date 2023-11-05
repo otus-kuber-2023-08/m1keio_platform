@@ -84,10 +84,21 @@
 
 <details closed>
   <summary>ДЗ 5</summary>
-  
+
 #### Q: Описание ДЗ
 #### A:
         1) Посоздавали разные сервис аккаунты в разных скоупах
         2) Посоздавали роли с разными наборами прав
         3) Посоздавали RoleBindings между ролями и сервисаккаунтами
+</details>
+
+<details closed>
+  <summary>ДЗ 6</summary>
+
+#### Q: Описание ДЗ
+#### A:
+        1) Разобрались с cert-manager
+        2) Подеплоили chartmuseum и harbor
+        3) Кастомизировали helm chart hipster-shop
+        4) Попробовали jsonnet, kuztomize
 </details>
