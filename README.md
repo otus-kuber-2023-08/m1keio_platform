@@ -102,3 +102,46 @@
         3) Кастомизировали helm chart hipster-shop
         4) Попробовали jsonnet, kuztomize
 </details>
+
+<details closed>
+  <summary>ДЗ 7</summary>
+
+#### Q: Описание ДЗ
+#### A:
+        1) Создали CRD,CR и необходимые ресурсы.
+        2) Создали контроллер при помощи kopf framework
+        3) Починили контроллер который криво создавал PVC.
+     Q: Показать, что код работает
+     A:
+        ```
+          ▶ kubectl get jobs.batch
+            NAME                         COMPLETIONS   DURATION   AGE
+            restore-mysql-instance-job   1/1           6s         16s
+          ▶ kubectl get jobs.batch
+            NAME                        COMPLETIONS   DURATION   AGE
+            backup-mysql-instance-job   1/1           11s        26s
+          private/m1keio_platform/kubernetes-operators  kubernetes-operators ✗                                                                                                                                 14h27m ⚑ ◒  ⍉
+          ▶ kubectl exec -it $MYSQLPOD -- mysql -u root -potuspassword1 -e "CREATE TABLE test (id smallint unsigned not null auto_increment, name varchar(20) not null, constraint pk_example primary key (id) );" otus-database
+          mysql: [Warning] Using a password on the command line interface can be insecure.
+
+          private/m1keio_platform/kubernetes-operators  kubernetes-operators ✗                                                                                                                                  14h27m ⚑ ◒
+          ▶ kubectl exec -it $MYSQLPOD -- mysql -potuspassword1 -e "INSERT INTO test ( id, name) VALUES ( null, 'some data' );" otus-database
+          mysql: [Warning] Using a password on the command line interface can be insecure.
+
+          private/m1keio_platform/kubernetes-operators  kubernetes-operators ✗                                                                                                                                  14h27m
+          ▶ kubectl exec -it $MYSQLPOD -- mysql -potuspassword1 -e "INSERT INTO test ( id, name ) VALUES ( null, 'some data-2' );" otus-database
+          mysql: [Warning] Using a password on the command line interface can be insecure.
+          kubectl exec -it $MYSQLPOD -- mysql -potuspassword1 -e "select * from test;" otus-database
+            mysql: [Warning] Using a password on the command line interface can be insecure.
+            +----+-------------+
+            | id | name        |
+            +----+-------------+
+            |  1 | some data   |
+            |  2 | some data-2 |
+            +----+-------------+
+          KOPF logs:
+          [2023-11-07 10:23:50,288] kopf.objects         [WARNING ] [default/mysql-instance] Patching failed with inconsistencies: (('remove', ('status',), {'kopf': {'progress': {'mysql_on_create': {'started': '2023-11-07T08:23:17.096469', 'stopped': '2023-11-07T08:23:44.767549', 'delayed': None, 'purpose': 'create', 'retries': 1, 'success': True, 'failure': False, 'message': None, 'subrefs': None}, 'update_object/spec.password': {'started': '2023-11-07T08:23:17.096490', 'stopped': None, 'delayed': None, 'purpose': 'create', 'retries': 0, 'success': False, 'failure': False, 'message': None, 'subrefs': None}}}}, None),)
+          start deletion mysql-instance jobs
+          password changed, diff: (('add', (), None, 'otuspassword1'),)
+        ```
+</details>
