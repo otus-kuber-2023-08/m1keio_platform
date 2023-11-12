@@ -145,3 +145,16 @@
           password changed, diff: (('add', (), None, 'otuspassword1'),)
         ```
 </details>
+
+<details closed>
+  <summary>ДЗ 8</summary>
+
+#### Q: Описание ДЗ
+#### A:
+        1) Установили victoriametrics operator из
+        ```
+        https://github.com/VictoriaMetrics/helm-charts/blob/master/charts/victoria-metrics-operator/README.md
+        ```
+        2) Написали deployment с nginx и nginx-exporter и configmap для переопределения конфига.
+        3) Добавили Service и ServiceMonitor
+</details>
