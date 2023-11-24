@@ -152,9 +152,78 @@
 #### Q: Описание ДЗ
 #### A:
         1) Установили victoriametrics operator из
-        ```
         https://github.com/VictoriaMetrics/helm-charts/blob/master/charts/victoria-metrics-operator/README.md
-        ```
         2) Написали deployment с nginx и nginx-exporter и configmap для переопределения конфига.
         3) Добавили Service и ServiceMonitor
 </details>
+
+<details closed>
+  <summary>ДЗ 9</summary>
+
+#### Q: Описание ДЗ
+#### A:
+        1. Создан новый Helm chart для hipster-shop:
+
+          ```bash
+          helm create kubernetes-templating/hipster-shop
+          ```
+
+        2. Выполненные обновления и установки hipster-shop через Helm:
+
+          - Установка и обновление hipster-shop в пространстве имен hipster-shop.
+
+        3. Создан и обновлен Helm chart для frontend:
+
+          ```bash
+          helm create kubernetes-templating/frontend
+          ```
+
+        4. Обновление зависимостей для hipster-shop:
+
+          ```bash
+          helm dep update kubernetes-templating/hipster-shop
+          ```
+
+        5. Установлен Helm plugin для работы с секретами:
+
+          ```bash
+            helm plugin install https://github.com/futuresimple/helm-secrets
+          ```
+
+        6. Работа с VictoriaMetrics Operator:
+
+          - Добавление репозитория victoriametrics, обновление репозиториев, поиск чартов VictoriaMetrics Operator и его установка в пространстве имен monitoring.
+
+        7. Установка и обновление Elastic Stack компонентов:
+
+          - Добавление репозитория elastic и установка Elasticsearch и Kibana в пространстве имен observability.
+
+        8. Удаление и повторная установка Kibana с исправлениями:
+
+          - Множественные попытки установки и удаления Kibana, включая очистку связанных ConfigMaps и других ресурсов.
+
+        9. Работа с AWS Load Balancer Controller:
+
+          - Установка и удаление aws-load-balancer-controller в пространстве имен kube-system.
+
+        10. Работа с Fluent Bit:
+
+          - Обновление чарта Fluent Bit и его настройка через файл значений.
+
+        11. Установка и настройка Grafana:
+
+          - Добавление репозитория grafana и настройка через файл значений.
+
+        12. Работа с Prometheus Elasticsearch Exporter:
+
+          - Установка и обновление Prometheus Elasticsearch Exporter с настройкой через файл значений.
+
+        13. Работа с Vector:
+
+          - Добавление репозитория vector и настройка чарта Vector для сбора и отправки логов.
+
+        14. Установка и обновление Loki:
+
+          - Установка и обновление чарта Loki от Grafana для управления логами.
+</details>
+
