@@ -1,0 +1,33 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  name: istiod-metrics
+  namespace: monitoring-system
+spec:
+  selector:
+    matchLabels:
+      app: istiod  # Adjust this label to match the Istio istiod service
+  namespaceSelector:
+    matchNames:
+    - istio-system
+    - microservice-demo
+  endpoints:
+  - port: http-monitoring  # Ensure this matches the port name exposed by the Istio service
+    interval: 15s  # Adjust the scrape interval as needed
+
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
+metadata:
+  name: envoy-stats
+  namespace: monitoring-system  # Adjust this to the namespace where your pods are located
+spec:
+  selector:
+    matchLabels:
+      app: '*'
+  namespaceSelector: {}
+  podMetricsEndpoints:
+  - port: envoy-prom  # Adjust this to the actual port name exposed by the Envoy containers
+    path: /stats/prometheus
+    interval: 15s  # Scrape interval, adjust as needed

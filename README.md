@@ -86,28 +86,36 @@
   <summary>ДЗ 5</summary>
 
 #### Q: Описание ДЗ
+
 #### A:
+
         1) Посоздавали разные сервис аккаунты в разных скоупах
         2) Посоздавали роли с разными наборами прав
         3) Посоздавали RoleBindings между ролями и сервисаккаунтами
+
 </details>
 
 <details closed>
   <summary>ДЗ 6</summary>
 
 #### Q: Описание ДЗ
+
 #### A:
+
         1) Разобрались с cert-manager
         2) Подеплоили chartmuseum и harbor
         3) Кастомизировали helm chart hipster-shop
         4) Попробовали jsonnet, kuztomize
+
 </details>
 
 <details closed>
   <summary>ДЗ 7</summary>
 
 #### Q: Описание ДЗ
+
 #### A:
+
         1) Создали CRD,CR и необходимые ресурсы.
         2) Создали контроллер при помощи kopf framework
         3) Починили контроллер который криво создавал PVC.
@@ -144,24 +152,30 @@
           start deletion mysql-instance jobs
           password changed, diff: (('add', (), None, 'otuspassword1'),)
         ```
+
 </details>
 
 <details closed>
   <summary>ДЗ 8</summary>
 
 #### Q: Описание ДЗ
+
 #### A:
+
         1) Установили victoriametrics operator из
         https://github.com/VictoriaMetrics/helm-charts/blob/master/charts/victoria-metrics-operator/README.md
         2) Написали deployment с nginx и nginx-exporter и configmap для переопределения конфига.
         3) Добавили Service и ServiceMonitor
+
 </details>
 
 <details closed>
   <summary>ДЗ 9</summary>
 
 #### Q: Описание ДЗ
+
 #### A:
+
         1. Создан новый Helm chart для hipster-shop:
 
           ```bash
@@ -225,5 +239,46 @@
         14. Установка и обновление Loki:
 
           - Установка и обновление чарта Loki от Grafana для управления логами.
+
 </details>
 
+<details closed>
+  <summary>ДЗ 10</summary>
+
+#### Q: Описание ДЗ
+
+#### A:
+
+        1. Создали кластер EKS используя pulumi. [source]{https://gitlab.com/1474/pulumi-eks-otus}
+        2. Cобрали и запушили докер образы из src/**/Dockerfile.
+        3. Установили Flux, но не v1 а v2.
+          ```
+          kubectl apply -f https://raw.githubusercontent.com/fluxcd/helmoperator/master/deploy/flux-helm-release-crd.yaml
+          curl -s https://fluxcd.io/install.sh | sudo bash\n
+          omz plugin enable fluxcd
+          export GITLAB_TOKEN=123
+          flux bootstrap gitlab --deploy-token-auth --owner=1474  --repository=microservices-demo --branch=main --path=deploy --personal
+          ```
+        4. Настроили установку, слежение и автообновление релиза через GitRepository, HelmRelease, ImageRepository,ImagePolicy, ImageUpdateAutomation
+        5. Настроили мониторинг через Victoria Metrics Operator при помощи VMCluster, VMAgent, VMServiceScrape, VMPodScrape
+        6. Добавили Grafana через Helm.
+        7. Настроили Canary через Flagger.
+          ```
+          kubectl get canaries -n microservices-demo
+            NAME       STATUS      WEIGHT   LASTTRANSITIONTIME
+            frontend   Succeeded   0        2023-11-27T16:22:23Z
+          kubectl describe canaries frontend -n microservices-demo
+            ...
+            Events:
+              Type     Reason  Age                     From     Message
+              ----     ------  ----                    ----     -------
+              Normal   Synced  3m45s (x6 over 2d22h)   flagger  New revision detected! Scaling up frontend.microservices-demo
+              Normal   Synced  3m15s (x6 over 2d22h)   flagger  Starting canary analysis for frontend.microservices-demo
+              Normal   Synced  3m15s (x2 over 70m)     flagger  Advance frontend.microservices-demo canary weight 50
+              Warning  Synced  2m45s (x21 over 2d22h)  flagger  Halt advancement no values found for istio metric request-success-rate probably frontend.microservices-demo is not receiving traffic: running query failed: no values found
+              Normal   Synced  2m15s (x2 over 70m)     flagger  Copying frontend.microservices-demo template spec to frontend-primary.microservices-demo
+              Normal   Synced  105s (x2 over 69m)      flagger  Routing all traffic to primary
+              Normal   Synced  75s (x2 over 69m)       flagger  Promotion completed! Scaling down frontend.microservices-demo
+          ```
+
+</details>
