@@ -1,0 +1,133 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: microservices-demo
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://gitlab.com/1474/microservices-demo.git
+  ref:
+    branch: main
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: frontend
+  namespace: microservices-demo
+spec:
+  interval: 2m
+  chart:
+    spec:
+      chart: charts/frontend
+      sourceRef:
+        kind: GitRepository
+        name: microservices-demo
+        namespace: flux-system
+      interval: 2m
+  values:
+    image:
+      repository: m1keio/frontend # {"$imagepolicy": "flux-system:frontend-policy:name"}
+      tag: v0.0.10 # {"$imagepolicy": "flux-system:frontend-policy:tag"}
+    visibleKey: "hiddenValue"
+    service:
+      type: ClusterIP
+      port: 80
+      targetPort: 8080
+      nodePort: 32672
+    replicas: 1
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: frontend
+  namespace: flux-system
+spec:
+  image: m1keio/frontend
+  interval: 1m0s
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: frontend-policy
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: frontend
+  policy:
+    semver:
+      range: '~v0.0.x'
+---
+# flux create source git podinfo  --url=ssh://"git@gitlab.com/1474/microservices-demo.git"     --branch=main     --private-key-file=/home/mtiurin/.ssh/id_rsa
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageUpdateAutomation
+metadata:
+  name: microservices-demo
+  namespace: flux-system
+spec:
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: '{{range .Updated.Images}}{{println .}}{{end}}'
+    push:
+      branch: main
+  interval: 2m0s
+  sourceRef:
+    kind: GitRepository
+    name: podinfo
+  update:
+    path: ./deploy
+    strategy: Setters
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  name: istiod-metrics
+  namespace: monitoring-system
+spec:
+  selector:
+    matchLabels:
+      app: istiod # Adjust this label to match the Istio istiod service
+  namespaceSelector:
+    matchNames:
+    - istio-system
+    - microservice-demo
+  endpoints:
+  - port: http-monitoring # Ensure this matches the port name exposed by the Istio service
+    interval: 15s # Adjust the scrape interval as needed
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
+metadata:
+  name: envoy-stats
+  namespace: monitoring-system # Adjust this to the namespace where your pods are located
+spec:
+  selector:
+    matchLabels:
+      app: '*'
+  namespaceSelector:
+    matchNames:
+    - istio-system # Adjust this to the namespace where your pods are located
+    - microservice-demo
+  podMetricsEndpoints:
+  - port: envoy-prom # Adjust this to the actual port name exposed by the Envoy containers
+    path: /stats/prometheus
+    interval: 15s # Scrape interval, adjust as needed
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
+metadata:
+  name: istio-envoy-stats
+  namespace: monitoring-system # Adjust this to the namespace where your pods are located
+spec:
+  selector: {}
+  namespaceSelector:
+    any: true
+  podMetricsEndpoints:
+  - port: http-envoy-prom
+    path: /stats/prometheus
+    interval: 15s # Scrape interval, adjust as needed

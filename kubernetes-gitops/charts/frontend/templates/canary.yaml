@@ -1,0 +1,55 @@
+---
+apiVersion: flagger.app/v1beta1
+kind: Canary
+metadata:
+  name: frontend
+  namespace: microservices-demo
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: frontend
+  # the maximum time in seconds for the canary deployment
+  # to make progress before it is rollback (default 600s)
+  progressDeadlineSeconds: 60
+  service:
+    # service port number
+    port: 80
+    # container port number or name (optional)
+    targetPort: 8080
+    # Istio gateways (optional)
+    gateways:
+    - frontend
+    # Istio virtual service host names (optional)
+    hosts:
+    - "*"
+    # Istio traffic policy (optional)
+    trafficPolicy:
+      tls:
+        # use ISTIO_MUTUAL when mTLS is enabled
+        mode: DISABLE
+    # Istio retry policy (optional)
+    retries:
+      attempts: 3
+      perTryTimeout: 1s
+      retryOn: "gateway-error,connect-failure,refused-stream"
+  analysis:
+    # schedule interval (default 60s)
+    interval: 30s
+    # max number of failed metric checks before rollback
+    threshold: 100
+    # max traffic percentage routed to canary
+    # percentage (0-100)
+    maxWeight: 50
+    # canary increment step
+    # percentage (0-100)
+    stepWeight: 50
+    metrics:
+    - name: request-success-rate
+      thresholdRange:
+        min: 1
+      interval: 1m
+    - name: request-duration
+      thresholdRange:
+        max: 1500
+      interval: 1m
