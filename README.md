@@ -599,3 +599,63 @@ state                      revoked
 ```
 
 </details>
+
+
+<details closed>
+  <summary>ДЗ 12</summary>
+
+* Deploy CSI HostPath Driver
+```bash
+
+git clone https://github.com/kubernetes-csi/csi-driver-host-path.git
+cd csi-driver-host-path
+cd deploy
+cd kubernetes-latest
+./deploy.sh
+
+```
+
+* Create storage class
+
+```bash
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/csi-driver-host-path/master/examples/csi-storageclass.yaml
+
+```
+
+* Create PVC
+
+``` bash
+
+kubectl apply -f pvc.yaml
+
+```
+
+
+* Create Pod
+
+```bash
+
+kubectl apply -f pod.yaml
+
+```
+
+* events:
+
+```bash
+kubectl events
+
+...
+8m20s                  Normal    ProvisioningSucceeded     PersistentVolumeClaim/storage-pvc                          Successfully provisioned volume pvc-38149df5-f853-4aa1-8b59-3817c11a5371
+8m20s                  Normal    Provisioning              PersistentVolumeClaim/storage-pvc                          External provisioner is provisioning volume for claim "default/storage-pvc"
+8m9s                   Normal    SuccessfulAttachVolume    Pod/storage-pod                                            AttachVolume.Attach succeeded for volume "pvc-38149df5-f853-4aa1-8b59-3817c11a5371"
+8m9s                   Normal    Scheduled                 Pod/storage-pod                                            Successfully assigned default/storage-pod to kind-control-plane
+7m59s                  Normal    Pulling                   Pod/storage-pod                                            Pulling image "nginx"
+7m37s                  Normal    Created                   Pod/storage-pod                                            Created container webpod
+7m37s                  Normal    Started                   Pod/storage-pod                                            Started container webpod
+7m37s                  Normal    Pulled                    Pod/storage-pod                                            Successfully pulled image "nginx" in 16.219496767s (21.63391741s including waiting)
+
+
+```
+
+</details>

@@ -1,0 +1,18 @@
+apiVersion: v1 # 
+kind: Pod 
+metadata:
+ name: storage-pod
+ labels: 
+  app: storage-pod
+spec: 
+ containers: 
+ - name: webpod
+   image: nginx
+   volumeMounts:
+    - name: data
+      mountPath: /data
+ volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: storage-pvc
+
